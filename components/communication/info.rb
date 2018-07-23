@@ -10,7 +10,7 @@ module Communication
     end
 
     def self.cant_place
-      puts 'wow, I cant place the ship here, try again..'
+      puts 'Wow, I cant place the ship here, let\'s try again..'
     end
   end
 end

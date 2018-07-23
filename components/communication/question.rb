@@ -22,12 +22,6 @@ module Communication
       }
     end
 
-    def self.allow_answers(input_str, *args)
-      return true if args.include?(input_str)
-      puts "Hm, please, try again (available options #{args}):"
-      allow_answers(gets.chomp, *args)
-    end
-
     def self.ask_about_position_letter
       puts 'Enter letter position (from A to K):'
       input_str = gets.chomp.downcase
@@ -40,6 +34,12 @@ module Communication
       input_str = gets.chomp
       allow_answers(input_str, *(0..9).map(&:to_s))
       input_str.to_i
+    end
+
+    def self.allow_answers(input_str, *args)
+      return true if args.include?(input_str)
+      puts "Hm, please, try again (available options #{args}):"
+      allow_answers(gets.chomp, *args)
     end
   end
 end

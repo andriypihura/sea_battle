@@ -1,8 +1,9 @@
-# handle custom errors
-class ErrorHandler
+# check for custom errors
+class CheckErrors
   def initialize(show_messages: false)
     @show_messages = show_messages
   end
+
   def outside_field_area(ship_data)
     return false if (ship_data & (100..150).to_a).empty?
     puts 'Ship can not be placed outside field area' if @show_messages

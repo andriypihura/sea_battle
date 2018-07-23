@@ -23,7 +23,7 @@ class Ship
   }.freeze
 
   attr_reader :size, :direction, :position_letter, :position_number,
-              :numbers_data, :numbers_data_with_restricted_area
+              :view_data, :view_data_with_restricted_area
 
   def initialize(size: 1, direction: DIRECTIONS[:horizontal])
     @size = size
@@ -37,7 +37,8 @@ class Ship
     @position_letter = position_letter
     @position_number = position_number
     @direction = direction || rand_direction
-    build_ship_data
+    build_ship_view_data
+    build_ship_with_restricted_area_view_data
   end
 
   def rotate
@@ -48,37 +49,44 @@ class Ship
                  end
   end
 
-  def build_ship_data
-    build_ship_nums_data
-    build_restricted_area_nums_data
+  private
+
+  def rand_direction
+    [Ship::DIRECTIONS[:vertical], Ship::DIRECTIONS[:horizontal]].sample
   end
 
-  def build_ship_nums_data
-    @numbers_data = [position_letter * 10 + position_number]
+  def build_ship_view_data
+    @view_data = [position_letter * 10 + position_number]
     return if size == 1
     (2..size).each do
-      @numbers_data.push(
-        @numbers_data[-1] + (direction == DIRECTIONS[:vertical] ? 10 : 1)
+      @view_data.push(
+        @view_data[-1] + (direction == DIRECTIONS[:vertical] ? 10 : 1)
       )
     end
   end
 
-  def build_restricted_area_nums_data
-    @numbers_data_with_restricted_area = @numbers_data.map do |e|
-      arr = []
-      arr << e + 10 if e < 90
-      arr << e + 11 if e < 90 && e % 10 != 9
-      arr << e + 9 if e < 90 && e % 10 != 0
-      arr << e - 10 if e > 9
-      arr << e - 11 if e > 9 && e % 10 != 0
-      arr << e - 9 if e > 9 && e % 10 != 9
-      arr << e - 1 if e % 10 != 0
-      arr << e + 1 if e % 10 != 9
-      arr
-    end.flatten.uniq
+  def build_ship_with_restricted_area_view_data
+    @view_data_with_restricted_area = @view_data.map do |e|
+      [
+        e,
+        *bottom_line_restricted_area(e),
+        *top_line_restricted_area(e),
+        *left_right_restricted_area(e)
+      ]
+    end.flatten.uniq.compact
   end
 
-  def rand_direction
-    [Ship::DIRECTIONS[:vertical], Ship::DIRECTIONS[:horizontal]].sample
+  def top_line_restricted_area(e)
+    return [] if e < 10
+    [e - 10, (e - 11 if e % 10 != 0), (e - 9 if e % 10 != 9)].compact
+  end
+
+  def bottom_line_restricted_area(e)
+    return [] if e > 89
+    [e + 10, (e + 11 if e % 10 != 9), (e + 9 if e % 10 != 0)].compact
+  end
+
+  def left_right_restricted_area(e)
+    [(e - 1 if e % 10 != 0), (e + 1 if e % 10 != 9)].compact
   end
 end
