@@ -13,23 +13,12 @@ class ShowFields
 
   def show_fields
     puts top_line
-    10.times { |row| puts field_row(row) }
+    @user_battle_field.show_field_matrix
+    puts top_line
+    @oponent_battle_field.show_field_matrix(hidden: true)
   end
 
   def top_line
-    [@user_battle_field, @oponent_battle_field].compact.map do
-      '-' + Array.new(10) { |e| "  #{e} " }.join
-    end.join(ships_delimiter)
-  end
-
-  def field_row(row)
-    shoting_field = @user_battle_field.shoting_field
-    Ship::POS_LETTERS.keys[row].to_s + Array.new(10) do |col|
-      shoting_field.include?(row * 10 + col) ? ' [] ' : ' -- '
-    end.join
-  end
-
-  def ships_delimiter
-    '  |||  '
+    '-' + Array.new(10) { |e| "  #{e} " }.join
   end
 end
