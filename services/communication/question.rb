@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Communication
   # questions to user
   class Question
@@ -5,7 +7,7 @@ module Communication
       puts 'Enter direction (v - vertical | h - horizontal):'
       input_str = gets.chomp
       allow_answers(input_str, 'v', 'h')
-      Ship::DIRECTIONS[input_str.casecmp('v').zero? ? :horizontal : :vertical]
+      Ship::DIRECTIONS[input_str.casecmp('v').zero? ? :vertical : :horizontal]
     end
 
     def self.mannually_placement
@@ -24,7 +26,8 @@ module Communication
 
     def self.ask_about_position_letter
       puts 'Enter letter position (from A to K):'
-      input_str = allow_answers(gets.chomp.downcase, *Ship::POS_LETTERS.keys.map(&:to_s))
+      input_str = allow_answers(gets.chomp.downcase,
+                                *Ship::POS_LETTERS.keys.map(&:to_s))
       Ship::POS_LETTERS[input_str.to_sym]
     end
 

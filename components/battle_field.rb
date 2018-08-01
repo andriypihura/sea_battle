@@ -1,15 +1,18 @@
+# frozen_string_literal: true
+
 # creates battle field
 class BattleField
-  attr_reader :shoting_field, :placing_field
+  attr_reader :shoting_field, :placing_field,
+              :shotted_places, :damaged_parts_view_data
 
   def initialize(mannually: false)
     @mannually = mannually
     @check_errors = CheckErrors.new(show_messages: mannually)
     @shotted_places = []
+    @damaged_parts_view_data = []
     init_default_variables
     place_ships
     build_fields
-    build_field_matrixes
     Communication::Info.field_ready if @mannually
   end
 
@@ -21,7 +24,6 @@ class BattleField
   def add_ship(ship)
     @ships << ship
     build_fields
-    build_field_matrixes
   end
 
   def can_be_placed(ship)
@@ -42,16 +44,25 @@ class BattleField
 
   def update(position_letter, position_number)
     @shotted_places << position_letter * 10 + position_number
-    build_field_matrixes
+    build_fields
   end
 
   def get_field_row_data(hidden = false)
-    hidden ? @hidden_matrix : @opened_matrix
+    build_fields
+    hidden ? @hidden_field_view_rows_data : @opened_field_view_rows_data
   end
 
   def update_ship_status(ship)
     ship.update_status
-    @shotted_places += ship.view_data_with_restricted_area if ship.dead?
+    return unless ship.dead?
+    @shotted_places += ship.view_data_with_restricted_area
+    @damaged_parts_view_data.delete_if { |el| ship.view_data.include?(el) }
+  end
+
+  def damage_ship(ship, position_letter, position_number)
+    ship.get_part(position_letter, position_number).kill
+    @damaged_parts_view_data << position_letter * 10 + position_number
+    update_ship_status(ship)
   end
 
   private
@@ -73,27 +84,25 @@ class BattleField
   def build_fields
     @shoting_field = @ships.map(&:view_data).flatten
     @placing_field = @ships.map(&:view_data_with_restricted_area).flatten
+    @opened_field_view_rows_data = build_field_view_rows_data
+    @hidden_field_view_rows_data = build_field_view_rows_data(hidden: true)
   end
 
-  def build_field_matrixes
-    @opened_matrix = build_matrix
-    @hidden_matrix = build_matrix(hidden: true)
-  end
-
-  def build_matrix(hidden: false)
+  def build_field_view_rows_data(hidden: false)
     Array.new(10) do |row|
       Ship::POS_LETTERS.keys[row].to_s + Array.new(10) do |col|
-        num_position = row * 10 + col
-        if @shotted_places.include?(num_position)
-          @shoting_field.include?(num_position) ? ' {} ' : ' ** '
-        else
-          if hidden
-            ' -- '
-          else
-            @shoting_field.include?(num_position) ? ' [] ' : ' -- '
-          end
-        end
+        symbol_for_position(row * 10 + col, hidden)
       end.join
+    end
+  end
+
+  def symbol_for_position(num_position, hidden)
+    if @shotted_places.include?(num_position)
+      @shoting_field.include?(num_position) ? ' {} ' : ' ** '
+    elsif hidden
+      ' -- '
+    else
+      @shoting_field.include?(num_position) ? ' [] ' : ' -- '
     end
   end
 end

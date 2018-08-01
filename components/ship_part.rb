@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # creates a part of ship
 class ShipPart
   STATUSES = {

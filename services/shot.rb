@@ -1,4 +1,4 @@
-require 'pry'
+# frozen_string_literal: true
 
 # inits shot
 class Shot
@@ -17,7 +17,6 @@ class Shot
   private
 
   def damage_ship(ship)
-    ship.get_part(@position_letter, @position_number).kill
-    @battle_field.update_ship_status(ship)
+    @battle_field.damage_ship(ship, @position_letter, @position_number)
   end
 end

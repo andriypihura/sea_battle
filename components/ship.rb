@@ -1,20 +1,12 @@
+# frozen_string_literal: true
+
 # creates ship
 class Ship
-  POS_LETTERS = {
-    a: 0,
-    b: 1,
-    c: 2,
-    d: 3,
-    e: 4,
-    f: 5,
-    g: 6,
-    h: 7,
-    i: 8,
-    k: 9
-  }.freeze
+  POS_LETTERS = { a: 0, b: 1, c: 2, d: 3, e: 4,
+                  f: 5, g: 6, h: 7, i: 8, k: 9 }.freeze
   DIRECTIONS = {
-    horizontal: :horizontal,
-    vertical: :vertical
+    horizontal: 'horizontal',
+    vertical: 'vertical'
   }.freeze
   STATUSES = {
     alive: 'alive',
@@ -43,11 +35,7 @@ class Ship
   end
 
   def rotate
-    @direction = if direction == DIRECTIONS[:horizontal]
-                   DIRECTIONS[:vertical]
-                 else
-                   DIRECTIONS[:horizontal]
-                 end
+    @direction = DIRECTIONS[vertical? ? :horizontal : :vertical]
   end
 
   def update_status
@@ -77,22 +65,17 @@ class Ship
 
   def init_ship_parts
     @parts = Array.new(size) do |s|
-      if direction == DIRECTIONS[:vertical]
-        ShipPart.new(@position_letter + s * 10, @position_number)
-      else
-        ShipPart.new(@position_letter, @position_number + s)
-      end
+      ShipPart.new(
+        @position_letter + (vertical? ? s : 0),
+        @position_number + (vertical? ? 0 : s)
+      )
     end
   end
 
   def build_ship_view_data
     @view_data = [position_letter * 10 + position_number]
     return if size == 1
-    (2..size).each do
-      @view_data.push(
-        @view_data[-1] + (direction == DIRECTIONS[:vertical] ? 10 : 1)
-      )
-    end
+    (2..size).each { @view_data << @view_data[-1] + (vertical? ? 10 : 1) }
   end
 
   def build_ship_with_restricted_area_view_data
@@ -118,5 +101,9 @@ class Ship
 
   def left_right_restricted_area(num)
     [(num - 1 if num % 10 != 0), (num + 1 if num % 10 != 9)].compact
+  end
+
+  def vertical?
+    direction == DIRECTIONS[:vertical]
   end
 end
