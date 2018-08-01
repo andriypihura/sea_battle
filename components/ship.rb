@@ -51,24 +51,22 @@ class Ship
   end
 
   def update_status
-    damaged_parts = @parts.select { |part| part.status == ShipPart::STATUSES[:dead] }
-    return if damaged_parts.empty?
-    puts 'damaged_parts'
-    print damaged_parts
-    puts
-    @status = STATUSES[damaged_parts.count == size ? :dead : :damaged]
+    damaged_parts_count = @parts.count do |part|
+      part.status == ShipPart::STATUSES[:dead]
+    end
+    return if damaged_parts_count.zero?
+    @status = STATUSES[damaged_parts_count == size ? :dead : :damaged]
   end
 
   def get_part(position_letter, position_number)
-    puts 'parts'
-    print @parts
-    puts
-    print position_letter, position_number
-    puts
     @parts.detect do |part|
       part.position_letter == position_letter &&
         part.position_number == position_number
     end
+  end
+
+  def dead?
+    status == STATUSES[:dead]
   end
 
   private
@@ -78,7 +76,6 @@ class Ship
   end
 
   def init_ship_parts
-    multiplier = direction == DIRECTIONS[:vertical] ? 10 : 1
     @parts = Array.new(size) do |s|
       if direction == DIRECTIONS[:vertical]
         ShipPart.new(@position_letter + s * 10, @position_number)
@@ -99,27 +96,27 @@ class Ship
   end
 
   def build_ship_with_restricted_area_view_data
-    @view_data_with_restricted_area = @view_data.map do |e|
+    @view_data_with_restricted_area = @view_data.map do |num|
       [
-        e,
-        *bottom_line_restricted_area(e),
-        *top_line_restricted_area(e),
-        *left_right_restricted_area(e)
+        num,
+        *bottom_line_restricted_area(num),
+        *top_line_restricted_area(num),
+        *left_right_restricted_area(num)
       ]
     end.flatten.uniq.compact
   end
 
-  def top_line_restricted_area(e)
-    return [] if e < 10
-    [e - 10, (e - 11 if e % 10 != 0), (e - 9 if e % 10 != 9)].compact
+  def top_line_restricted_area(num)
+    return [] if num < 10
+    [num - 10, (num - 11 if num % 10 != 0), (num - 9 if num % 10 != 9)].compact
   end
 
-  def bottom_line_restricted_area(e)
-    return [] if e > 89
-    [e + 10, (e + 11 if e % 10 != 9), (e + 9 if e % 10 != 0)].compact
+  def bottom_line_restricted_area(num)
+    return [] if num > 89
+    [num + 10, (num + 11 if num % 10 != 9), (num + 9 if num % 10 != 0)].compact
   end
 
-  def left_right_restricted_area(e)
-    [(e - 1 if e % 10 != 0), (e + 1 if e % 10 != 9)].compact
+  def left_right_restricted_area(num)
+    [(num - 1 if num % 10 != 0), (num + 1 if num % 10 != 9)].compact
   end
 end

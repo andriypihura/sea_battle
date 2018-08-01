@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # place ship
 class PlaceShip
   def initialize(battle_field, ship, mannually)
@@ -10,7 +12,7 @@ class PlaceShip
     loop do
       @mannually ? set_mannual_position : set_rand_position
       break if @battle_field.can_be_placed(@ship)
-      Communication::Info.cant_place
+      Communication::Info.cant_place if @mannually
     end
     add_ship_to_battlefield
   end

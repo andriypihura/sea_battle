@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # check for custom errors
 class CheckErrors
   def initialize(show_messages: false)

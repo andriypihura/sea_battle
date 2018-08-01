@@ -24,8 +24,7 @@ module Communication
 
     def self.ask_about_position_letter
       puts 'Enter letter position (from A to K):'
-      input_str = gets.chomp.downcase
-      allow_answers(input_str, *Ship::POS_LETTERS.keys.map(&:to_s))
+      input_str = allow_answers(gets.chomp.downcase, *Ship::POS_LETTERS.keys.map(&:to_s))
       Ship::POS_LETTERS[input_str.to_sym]
     end
 
@@ -37,9 +36,9 @@ module Communication
     end
 
     def self.allow_answers(input_str, *args)
-      return true if args.include?(input_str)
+      return input_str if args.include?(input_str)
       puts "Hm, please, try again (available options #{args}):"
-      allow_answers(gets.chomp, *args)
+      allow_answers(gets.chomp.downcase, *args)
     end
   end
 end

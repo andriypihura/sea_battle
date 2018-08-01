@@ -45,15 +45,13 @@ class BattleField
     build_field_matrixes
   end
 
-  def show_field_matrix(hidden = false)
-    matrix_to_show = hidden ? @hidden_matrix : @opened_matrix
-    matrix_to_show.each { |row| puts row }
+  def get_field_row_data(hidden = false)
+    hidden ? @hidden_matrix : @opened_matrix
   end
 
   def update_ship_status(ship)
     ship.update_status
-    ship.status == Ship::STATUSES[:dead]
-    @shotted_places += ship.view_data_with_restricted_area
+    @shotted_places += ship.view_data_with_restricted_area if ship.dead?
   end
 
   private
@@ -86,14 +84,14 @@ class BattleField
     Array.new(10) do |row|
       Ship::POS_LETTERS.keys[row].to_s + Array.new(10) do |col|
         num_position = row * 10 + col
-        if hidden
-          if @shotted_places.include?(num_position)
-            @shoting_field.include?(num_position) ? ' {} ' : ' ** '
-          else
-            ' -- '
-          end
+        if @shotted_places.include?(num_position)
+          @shoting_field.include?(num_position) ? ' {} ' : ' ** '
         else
-           @shoting_field.include?(num_position) ? ' [] ' : ' -- '
+          if hidden
+            ' -- '
+          else
+            @shoting_field.include?(num_position) ? ' [] ' : ' -- '
+          end
         end
       end.join
     end

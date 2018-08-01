@@ -1,3 +1,5 @@
+require 'pry'
+
 # inits shot
 class Shot
   def initialize(battle_field, position_letter, position_number)
@@ -15,9 +17,6 @@ class Shot
   private
 
   def damage_ship(ship)
-    puts 'part'
-    print ship.get_part(@position_letter, @position_number)
-    puts
     ship.get_part(@position_letter, @position_number).kill
     @battle_field.update_ship_status(ship)
   end
