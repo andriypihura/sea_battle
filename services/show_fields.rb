@@ -9,6 +9,7 @@ class ShowFields
 
   def call
     system('clear')
+    Communication::Info.show_header
     show_fields
   end
 

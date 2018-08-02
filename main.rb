@@ -12,6 +12,7 @@ require './components/ship_part'
 require './components/battle_field'
 
 system('clear')
+Communication::Info.show_header
 Communication::Info.greating
 mannually = Communication::Question.mannually_placement
 user_battle_field = BattleField.new(mannually: mannually)
