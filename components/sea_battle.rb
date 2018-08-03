@@ -53,11 +53,8 @@ class SeaBattle
     return random_position_for_shot if random
     position = Communication::Question.position
     position_data = [position[:pos_letter], position[:pos_number]]
-    get_position_for_shot if CheckErrors.new(show_messages: true)
-                                        .already_in_fire(
-                                          opponent_battle_field.shotted_places,
-                                          *position_data
-                                        )
+    return position_data unless already_in_fire(position_data)
+    get_position_for_shot
   end
 
   def random_position_for_shot
@@ -77,5 +74,12 @@ class SeaBattle
     else
       Communication::Info.loser
     end
+  end
+
+  def already_in_fire(position_data)
+    CheckErrors.new(show_messages: true).already_in_fire(
+      opponent_battle_field.shotted_places,
+      *position_data
+    )
   end
 end
