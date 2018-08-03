@@ -1,18 +1,28 @@
 # frozen_string_literal: true
 
-require 'colorize'
-
 module Communication
   # general information
   class Info
     class << self
       def show_header
-        puts '╱╱╱╱╱╱╱╱╱╱╭╮╱╱╱╱╭╮╱╭╮╭╮'
-        puts '╱╱╱╱╱╱╱╱╱╱┃┃╱╱╱╭╯╰┳╯╰┫┃'
-        puts '╭━━┳━━┳━━╮┃╰━┳━┻╮╭┻╮╭┫┃╭━━╮'
-        puts '┃━━┫┃━┫╭╮┃┃╭╮┃╭╮┃┃╱┃┃┃┃┃┃━┫'
-        puts '┣━━┃┃━┫╭╮┃┃╰╯┃╭╮┃╰╮┃╰┫╰┫┃━┫'
-        puts '╰━━┻━━┻╯╰╯╰━━┻╯╰┻━╯╰━┻━┻━━╯'
+        if STDIN.winsize[1] > 114
+          show_text_center '************************************************[]************************[]********[]********[]                  '
+          show_text_center '************************************************[]********************[][][][][][][][][][]****[]                  '
+          show_text_center '*****[][][][][][][]****[][][][]****[][][][][]***[]**********[][][][][]****[]********[]********[]**********[][][][]'
+          show_text_center '***[][][]****[][][]****[]**********[]******[]***[]**********[]******[]****[]********[]********[]**********[]      '
+          show_text_center '***[][][]**************[]**********[]******[]***[][][][][]**[]******[]****[]********[]********[]**********[]      '
+          show_text_center '*****[][][][][]********[][][][]****[][][][][]***[]******[]**[][][][][]****[]********[]********[]**********[][][][]'
+          show_text_center '***********[][][][]****[]**********[]******[]***[]******[]**[]******[]****[]********[]********[]**********[]      '
+          show_text_center '**[][]**[][][][]*******[]**********[]******[]***[]******[]**[]******[]****[]********[]********[]**********[]      '
+          show_text_center '***[][][][][][]********[][][][]****[]******[]***[][][][][]**[]******[]****[][][][]**[][][][]**[][][][][]**[][][][]'
+        else
+          show_text_center '╱╱╱╱╱╱╱╱╱╱╭╮╱╱╱╱╭╮╱╭╮╭╮    '
+          show_text_center '╱╱╱╱╱╱╱╱╱╱┃┃╱╱╱╭╯╰┳╯╰┫┃    '
+          show_text_center '╭━━┳━━┳━━╮┃╰━┳━┻╮╭┻╮╭┫┃╭━━╮'
+          show_text_center '┃━━┫┃━┫╭╮┃┃╭╮┃╭╮┃┃╱┃┃┃┃┃┃━┫'
+          show_text_center '┣━━┃┃━┫╭╮┃┃╰╯┃╭╮┃╰╮┃╰┫╰┫┃━┫'
+          show_text_center '╰━━┻━━┻╯╰╯╰━━┻╯╰┻━╯╰━┻━┻━━╯'
+        end
         puts
       end
 
@@ -33,11 +43,27 @@ module Communication
       end
 
       def winner
-        puts 'Yeah! Congrads'
+        puts 'Yeah! Congradulation!'.green
       end
 
       def loser
-        puts 'Oh noo!'
+        puts 'You lost this game :('.red
+        puts 'Mb you are not so bad in smth else! (do not play again)'
+      end
+
+      def successfull_shot
+        puts 'Bang-bang mthrfckr! Yeah!'.green
+        your_turn
+      end
+
+      def your_turn
+        puts 'Your turn'.green
+      end
+
+      private
+
+      def show_text_center(str)
+        puts str.center(STDIN.winsize[1])
       end
     end
   end

@@ -8,7 +8,6 @@ class ShowFields
   end
 
   def call
-    system('clear')
     Communication::Info.show_header
     show_fields
   end
@@ -16,7 +15,9 @@ class ShowFields
   private
 
   def show_fields
-    show_row(top_line, (top_line if @oponent_field_rows_data))
+    show_row(title_line('User'),
+             (title_line('Opponent') if @oponent_field_rows_data))
+    show_row(numbers_line, (numbers_line if @oponent_field_rows_data))
     10.times do |index|
       if @oponent_field_rows_data
         show_row(@user_field_rows_data[index], @oponent_field_rows_data[index])
@@ -26,8 +27,12 @@ class ShowFields
     end
   end
 
-  def top_line
+  def numbers_line
     '-' + Array.new(10) { |e| "  #{e} " }.join
+  end
+
+  def title_line(name)
+    name.center(40)
   end
 
   def delimiter
@@ -35,6 +40,8 @@ class ShowFields
   end
 
   def show_row(first_field_data, second_field_data = nil)
-    puts [first_field_data, second_field_data].compact.join(delimiter)
+    puts [first_field_data, second_field_data].compact
+                                              .join(delimiter)
+                                              .center(STDIN.winsize[1])
   end
 end

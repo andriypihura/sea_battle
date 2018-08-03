@@ -18,9 +18,9 @@ class PlaceShip
     loop do
       set_mannual_position
       break if ship_can_be_placed
-      Communication::Info.cant_place
     end
     add_ship_to_battlefield
+    system('clear')
     ShowFields.new(@battle_field).call
   end
 
