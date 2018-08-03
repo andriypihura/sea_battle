@@ -1,5 +1,5 @@
 # sea_battle
 
-clone
-cd sea_battle
-ruby main.rb
+clone<br/>
+cd sea_battle<br/>
+ruby main.rb<br/>
