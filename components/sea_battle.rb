@@ -33,6 +33,7 @@ class SeaBattle
   private
 
   def users_turn
+    return if someone_won?
     user_shot = Shot.new(opponent_battle_field,
                          *get_position_for_shot)
     user_shot.call
@@ -43,6 +44,7 @@ class SeaBattle
   end
 
   def opponents_turn
+    return if someone_won?
     opponent_shot = Shot.new(user_battle_field,
                              *get_position_for_shot(random: true))
     opponent_shot.call

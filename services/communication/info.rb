@@ -43,7 +43,7 @@ module Communication
       end
 
       def winner
-        puts 'Yeah! Congradulation!'.green
+        puts 'Yeah! Congratulation!'.green
       end
 
       def loser
